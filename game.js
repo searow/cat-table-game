@@ -112,14 +112,14 @@ class CatGame {
             
             // Create left paw
             this.leftPaw = fbx.clone();
-            this.leftPaw.position.set(-0.4, -0.3, -0.8);
-            this.leftPaw.rotation.set(0, Math.PI, 0);
+            this.leftPaw.position.set(-0.2, -0.2, -0.1); // Moved Z from -0.15 to -0.1
+            this.leftPaw.rotation.set(-Math.PI/2, Math.PI + Math.PI/2, 0);
             console.log('Left paw created and positioned');
             
             // Create right paw
             this.rightPaw = fbx.clone();
-            this.rightPaw.position.set(0.4, -0.3, -0.8);
-            this.rightPaw.rotation.set(0, Math.PI, 0);
+            this.rightPaw.position.set(0.2, -0.2, -0.1); // Moved Z from -0.15 to -0.1
+            this.rightPaw.rotation.set(-Math.PI/2, Math.PI + Math.PI/2, 0);
             console.log('Right paw created and positioned');
             
             // Add paws to camera
