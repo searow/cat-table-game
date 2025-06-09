@@ -107,9 +107,12 @@ class CatGame {
     onKeyDown(event) {
         this.pressedKeys.add(event.code);
         
-        // Handle Enter key separately since it's not a movement key
-        if (event.code === 'Enter') {
-            this.swipePaws();
+        // Handle Q and E keys for independent paw movement
+        if (event.code === 'KeyQ') {
+            this.swipeLeftPaw();
+        }
+        if (event.code === 'KeyE') {
+            this.swipeRightPaw();
         }
     }
 
@@ -117,8 +120,8 @@ class CatGame {
         this.pressedKeys.delete(event.code);
     }
 
-    swipePaws() {
-        // Animate paws swiping
+    swipeLeftPaw() {
+        // Animate left paw swiping
         const startTime = Date.now();
         const duration = 500; // 500ms animation
 
@@ -129,6 +132,34 @@ class CatGame {
             // Create a smooth arc motion
             const angle = Math.sin(progress * Math.PI) * 0.5;
             this.leftPaw.rotation.x = angle;
+            
+            // Check for collisions with objects
+            this.checkObjectCollisions();
+            
+            // Continue animation if not complete
+            if (progress < 1) {
+                requestAnimationFrame(animateSwipe);
+            } else {
+                // Reset paw after animation
+                this.leftPaw.rotation.x = 0;
+            }
+        };
+
+        // Start the animation
+        animateSwipe();
+    }
+
+    swipeRightPaw() {
+        // Animate right paw swiping
+        const startTime = Date.now();
+        const duration = 500; // 500ms animation
+
+        const animateSwipe = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Create a smooth arc motion
+            const angle = Math.sin(progress * Math.PI) * 0.5;
             this.rightPaw.rotation.x = -angle;
             
             // Check for collisions with objects
@@ -138,8 +169,7 @@ class CatGame {
             if (progress < 1) {
                 requestAnimationFrame(animateSwipe);
             } else {
-                // Reset paws after animation
-                this.leftPaw.rotation.x = 0;
+                // Reset paw after animation
                 this.rightPaw.rotation.x = 0;
             }
         };
