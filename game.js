@@ -414,16 +414,16 @@ class CatGame {
                 // Determine direction based on which paw is animating
                 let horizontalForce = 0;
                 if (this.isLeftPawAnimating) {
-                    horizontalForce = 0.05 + (Math.random() - 0.5) * 0.02; // Base 0.05 ± 0.01
+                    horizontalForce = 0.03 + (Math.random() - 0.5) * 0.02; // Base 0.05 ± 0.01
                 } else if (this.isRightPawAnimating) {
-                    horizontalForce = -0.05 + (Math.random() - 0.5) * 0.02; // Base -0.05 ± 0.01
+                    horizontalForce = -0.03 + (Math.random() - 0.5) * 0.02; // Base -0.05 ± 0.01
                 }
                 
                 // Apply the force in the cat's local space
                 obj.userData.velocity = new THREE.Vector3(
-                    rightVector.x * horizontalForce + forwardVector.x * 0.05,
+                    rightVector.x * horizontalForce + forwardVector.x * 0.02, // Reduced from 0.05 to 0.02
                     0.1,
-                    rightVector.z * horizontalForce + forwardVector.z * 0.05
+                    rightVector.z * horizontalForce + forwardVector.z * 0.02  // Reduced from 0.05 to 0.02
                 );
                 
                 // Increment score when object is hit
