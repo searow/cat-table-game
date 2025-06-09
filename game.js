@@ -2,6 +2,10 @@ class CatGame {
     constructor() {
         console.log('Initializing game...');
         
+        // Initialize score
+        this.score = 0;
+        this.scoreElement = document.getElementById('score');
+        
         // Scene setup
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x87CEEB); // Light blue background
@@ -178,6 +182,11 @@ class CatGame {
         animateSwipe();
     }
 
+    updateScore() {
+        this.score++;
+        this.scoreElement.textContent = `Score: ${this.score}`;
+    }
+
     checkObjectCollisions() {
         const cameraPosition = this.camera.position.clone();
         const cameraDirection = new THREE.Vector3(0, 0, -1);
@@ -195,6 +204,8 @@ class CatGame {
                     0.1,
                     (Math.random() - 0.5) * 0.2
                 );
+                // Increment score when object is hit
+                this.updateScore();
             }
         });
     }
