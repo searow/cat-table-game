@@ -214,7 +214,8 @@ class CatGame {
         const startTime = Date.now();
         const rotationDuration = 300; // Duration for rotation
         const arcDuration = 300; // Duration for arc motion
-        const totalDuration = rotationDuration + arcDuration;
+        const returnDuration = 300; // Duration for return motion
+        const totalDuration = rotationDuration + arcDuration + returnDuration;
 
         const animateSwipe = () => {
             const elapsed = Date.now() - startTime;
@@ -229,7 +230,7 @@ class CatGame {
                 // Keep position fixed during rotation
                 this.leftPaw.position.x = originalPosition.x;
                 this.leftPaw.position.z = originalPosition.z;
-            } else {
+            } else if (progress < (rotationDuration + arcDuration) / totalDuration) {
                 // Phase 2: Move in semi-circle
                 const arcProgress = (progress - (rotationDuration / totalDuration)) * (totalDuration / arcDuration);
                 const angle = arcProgress * Math.PI; // Move from 0 to 180 degrees
@@ -246,6 +247,16 @@ class CatGame {
                 
                 // Maintain the -90 degree rotation
                 this.leftPaw.rotation.y = originalRotation - Math.PI/2;
+            } else {
+                // Phase 3: Return to starting position
+                const returnProgress = (progress - ((rotationDuration + arcDuration) / totalDuration)) * (totalDuration / returnDuration);
+                
+                // Linear interpolation back to original position
+                this.leftPaw.position.x = originalPosition.x - (Math.sin(Math.PI) * 0.5 * (1 - returnProgress));
+                this.leftPaw.position.z = originalPosition.z + ((Math.cos(Math.PI) - 1) * 0.5 * (1 - returnProgress));
+                
+                // Rotate back to original rotation
+                this.leftPaw.rotation.y = originalRotation - (Math.PI/2 * (1 - returnProgress));
             }
             
             // Check for collisions with objects
@@ -284,7 +295,8 @@ class CatGame {
         const startTime = Date.now();
         const rotationDuration = 300; // Duration for rotation
         const arcDuration = 300; // Duration for arc motion
-        const totalDuration = rotationDuration + arcDuration;
+        const returnDuration = 300; // Duration for return motion
+        const totalDuration = rotationDuration + arcDuration + returnDuration;
 
         const animateSwipe = () => {
             const elapsed = Date.now() - startTime;
@@ -299,7 +311,7 @@ class CatGame {
                 // Keep position fixed during rotation
                 this.rightPaw.position.x = originalPosition.x;
                 this.rightPaw.position.z = originalPosition.z;
-            } else {
+            } else if (progress < (rotationDuration + arcDuration) / totalDuration) {
                 // Phase 2: Move in semi-circle
                 const arcProgress = (progress - (rotationDuration / totalDuration)) * (totalDuration / arcDuration);
                 const angle = arcProgress * Math.PI; // Move from 0 to 180 degrees
@@ -316,6 +328,16 @@ class CatGame {
                 
                 // Maintain the 90 degree rotation
                 this.rightPaw.rotation.y = originalRotation + Math.PI/2;
+            } else {
+                // Phase 3: Return to starting position
+                const returnProgress = (progress - ((rotationDuration + arcDuration) / totalDuration)) * (totalDuration / returnDuration);
+                
+                // Linear interpolation back to original position
+                this.rightPaw.position.x = originalPosition.x + (Math.sin(Math.PI) * 0.5 * (1 - returnProgress));
+                this.rightPaw.position.z = originalPosition.z + ((Math.cos(Math.PI) - 1) * 0.5 * (1 - returnProgress));
+                
+                // Rotate back to original rotation
+                this.rightPaw.rotation.y = originalRotation + (Math.PI/2 * (1 - returnProgress));
             }
             
             // Check for collisions with objects
