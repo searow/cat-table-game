@@ -226,9 +226,14 @@ class CatGame {
                 const angle = arcProgress * Math.PI; // Move from 0 to 180 degrees
                 const radius = 0.5; // Radius of the arc
                 
+                // Calculate arc position relative to original position
+                // Start at original position and move in semi-circle
+                const dx = Math.sin(angle) * radius;
+                const dz = (Math.cos(angle) - 1) * radius; // Subtract 1 to start at original position
+                
                 // Move in semi-circle (negative X and negative Z)
-                this.leftPaw.position.x = originalPosition.x - (Math.sin(angle) * radius);
-                this.leftPaw.position.z = originalPosition.z - (Math.cos(angle) * radius);
+                this.leftPaw.position.x = originalPosition.x - dx;
+                this.leftPaw.position.z = originalPosition.z + dz;
                 
                 // Maintain the -90 degree rotation
                 this.leftPaw.rotation.y = originalRotation - Math.PI/2;
@@ -285,9 +290,14 @@ class CatGame {
                 const angle = arcProgress * Math.PI; // Move from 0 to 180 degrees
                 const radius = 0.5; // Radius of the arc
                 
+                // Calculate arc position relative to original position
+                // Start at original position and move in semi-circle
+                const dx = Math.sin(angle) * radius;
+                const dz = (Math.cos(angle) - 1) * radius; // Subtract 1 to start at original position
+                
                 // Move in semi-circle (positive X and negative Z)
-                this.rightPaw.position.x = originalPosition.x + (Math.sin(angle) * radius);
-                this.rightPaw.position.z = originalPosition.z - (Math.cos(angle) * radius);
+                this.rightPaw.position.x = originalPosition.x + dx;
+                this.rightPaw.position.z = originalPosition.z + dz;
                 
                 // Maintain the 90 degree rotation
                 this.rightPaw.rotation.y = originalRotation + Math.PI/2;
