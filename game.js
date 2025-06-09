@@ -67,6 +67,10 @@ class CatGame {
         this.createTableObjects();
         console.log('Table objects created');
 
+        // Add animation state tracking
+        this.isLeftPawAnimating = false;
+        this.isRightPawAnimating = false;
+
         // Start animation
         this.animate();
         console.log('Game initialization complete');
@@ -194,6 +198,11 @@ class CatGame {
     }
 
     swipeLeftPaw() {
+        // Don't start new animation if one is already running
+        if (this.isLeftPawAnimating) return;
+        
+        this.isLeftPawAnimating = true;
+        
         // Store original positions and rotations
         const originalRotation = this.leftPaw.rotation.y;
         const originalPosition = {
@@ -250,6 +259,7 @@ class CatGame {
                 this.leftPaw.rotation.y = originalRotation;
                 this.leftPaw.position.x = originalPosition.x;
                 this.leftPaw.position.z = originalPosition.z;
+                this.isLeftPawAnimating = false; // Reset animation state
             }
         };
 
@@ -258,6 +268,11 @@ class CatGame {
     }
 
     swipeRightPaw() {
+        // Don't start new animation if one is already running
+        if (this.isRightPawAnimating) return;
+        
+        this.isRightPawAnimating = true;
+        
         // Store original positions and rotations
         const originalRotation = this.rightPaw.rotation.y;
         const originalPosition = {
@@ -314,6 +329,7 @@ class CatGame {
                 this.rightPaw.rotation.y = originalRotation;
                 this.rightPaw.position.x = originalPosition.x;
                 this.rightPaw.position.z = originalPosition.z;
+                this.isRightPawAnimating = false; // Reset animation state
             }
         };
 
