@@ -267,6 +267,9 @@ class CatGame {
                 
                 // Maintain the -90 degree rotation
                 this.leftPaw.rotation.y = originalRotation - Math.PI/2;
+
+                // Check for collisions with objects
+                this.checkObjectCollisions();
             } else {
                 // Phase 3: Return to starting position
                 const returnProgress = (progress - ((rotationDuration + arcDuration) / totalDuration)) * (totalDuration / returnDuration);
@@ -350,6 +353,9 @@ class CatGame {
                 
                 // Maintain the 90 degree rotation
                 this.rightPaw.rotation.y = originalRotation + Math.PI/2;
+
+                // Check for collisions with objects
+                this.checkObjectCollisions();
             } else {
                 // Phase 3: Return to starting position
                 const returnProgress = (progress - ((rotationDuration + arcDuration) / totalDuration)) * (totalDuration / returnDuration);
@@ -361,9 +367,6 @@ class CatGame {
                 // Rotate back to original rotation
                 this.rightPaw.rotation.y = originalRotation + (Math.PI/2 * (1 - returnProgress));
             }
-            
-            // Check for collisions with objects
-            this.checkObjectCollisions();
             
             // Continue animation if not complete
             if (progress < 1) {
