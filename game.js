@@ -204,8 +204,8 @@ class CatGame {
         // Animate left paw swiping
         const startTime = Date.now();
         const rotationDuration = 300; // Duration for rotation
-        const translationDuration = 300; // Duration for translation
-        const totalDuration = rotationDuration + translationDuration;
+        const arcDuration = 300; // Duration for arc motion
+        const totalDuration = rotationDuration + arcDuration;
 
         const animateSwipe = () => {
             const elapsed = Date.now() - startTime;
@@ -221,13 +221,14 @@ class CatGame {
                 this.leftPaw.position.x = originalPosition.x;
                 this.leftPaw.position.z = originalPosition.z;
             } else {
-                // Phase 2: Translate forward diagonally
-                const translationProgress = (progress - (rotationDuration / totalDuration)) * (totalDuration / translationDuration);
-                const distance = 0.5; // Distance to move
+                // Phase 2: Move in semi-circle
+                const arcProgress = (progress - (rotationDuration / totalDuration)) * (totalDuration / arcDuration);
+                const angle = arcProgress * Math.PI; // Move from 0 to 180 degrees
+                const radius = 0.5; // Radius of the arc
                 
-                // Move diagonally (negative X and negative Z)
-                this.leftPaw.position.x = originalPosition.x - (distance * translationProgress);
-                this.leftPaw.position.z = originalPosition.z - (distance * translationProgress);
+                // Move in semi-circle (negative X and negative Z)
+                this.leftPaw.position.x = originalPosition.x - (Math.sin(angle) * radius);
+                this.leftPaw.position.z = originalPosition.z - (Math.cos(angle) * radius);
                 
                 // Maintain the -90 degree rotation
                 this.leftPaw.rotation.y = originalRotation - Math.PI/2;
@@ -262,8 +263,8 @@ class CatGame {
         // Animate right paw swiping
         const startTime = Date.now();
         const rotationDuration = 300; // Duration for rotation
-        const translationDuration = 300; // Duration for translation
-        const totalDuration = rotationDuration + translationDuration;
+        const arcDuration = 300; // Duration for arc motion
+        const totalDuration = rotationDuration + arcDuration;
 
         const animateSwipe = () => {
             const elapsed = Date.now() - startTime;
@@ -279,13 +280,14 @@ class CatGame {
                 this.rightPaw.position.x = originalPosition.x;
                 this.rightPaw.position.z = originalPosition.z;
             } else {
-                // Phase 2: Translate forward diagonally
-                const translationProgress = (progress - (rotationDuration / totalDuration)) * (totalDuration / translationDuration);
-                const distance = 0.5; // Distance to move
+                // Phase 2: Move in semi-circle
+                const arcProgress = (progress - (rotationDuration / totalDuration)) * (totalDuration / arcDuration);
+                const angle = arcProgress * Math.PI; // Move from 0 to 180 degrees
+                const radius = 0.5; // Radius of the arc
                 
-                // Move diagonally (positive X and negative Z)
-                this.rightPaw.position.x = originalPosition.x + (distance * translationProgress);
-                this.rightPaw.position.z = originalPosition.z - (distance * translationProgress);
+                // Move in semi-circle (positive X and negative Z)
+                this.rightPaw.position.x = originalPosition.x + (Math.sin(angle) * radius);
+                this.rightPaw.position.z = originalPosition.z - (Math.cos(angle) * radius);
                 
                 // Maintain the 90 degree rotation
                 this.rightPaw.rotation.y = originalRotation + Math.PI/2;
