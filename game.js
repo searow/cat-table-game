@@ -38,9 +38,16 @@ class CatGame {
         this.scene.add(this.table);
         console.log('Table added');
 
-        // Cat's paws
-        this.createPaws();
-        console.log('Paws created');
+        // Initialize paws as null
+        this.leftPaw = null;
+        this.rightPaw = null;
+        
+        // Load the paw model
+        this.loadPawModel().then(() => {
+            console.log('Paws loaded successfully');
+        }).catch(error => {
+            console.error('Error loading paws:', error);
+        });
         
         // Add camera to scene
         this.scene.add(this.camera);
@@ -65,7 +72,69 @@ class CatGame {
         console.log('Game initialization complete');
     }
 
-    createPaws() {
+    async loadPawModel() {
+        const loader = new THREE.FBXLoader();
+        
+        try {
+            console.log('Starting to load FBX model...');
+            const fbx = await new Promise((resolve, reject) => {
+                loader.load(
+                    'assets/CatPawHands.fbx',
+                    (object) => {
+                        console.log('FBX model loaded successfully:', object);
+                        console.log('Model structure:', {
+                            position: object.position,
+                            rotation: object.rotation,
+                            scale: object.scale,
+                            children: object.children.map(child => ({
+                                name: child.name,
+                                type: child.type,
+                                position: child.position,
+                                rotation: child.rotation,
+                                scale: child.scale
+                            }))
+                        });
+                        resolve(object);
+                    },
+                    (xhr) => {
+                        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                    },
+                    (error) => {
+                        console.error('Error loading FBX:', error);
+                        reject(error);
+                    }
+                );
+            });
+
+            // Scale and position the model appropriately
+            fbx.scale.set(0.0024, 0.0024, 0.0024); // Double the previous size
+            console.log('Model scaled');
+            
+            // Create left paw
+            this.leftPaw = fbx.clone();
+            this.leftPaw.position.set(-0.4, -0.3, -0.8);
+            this.leftPaw.rotation.set(0, Math.PI, 0);
+            console.log('Left paw created and positioned');
+            
+            // Create right paw
+            this.rightPaw = fbx.clone();
+            this.rightPaw.position.set(0.4, -0.3, -0.8);
+            this.rightPaw.rotation.set(0, Math.PI, 0);
+            console.log('Right paw created and positioned');
+            
+            // Add paws to camera
+            this.camera.add(this.leftPaw);
+            this.camera.add(this.rightPaw);
+            console.log('Paws added to camera');
+            
+        } catch (error) {
+            console.error('Error in loadPawModel:', error);
+            // Fallback to basic geometry if model fails to load
+            this.createBasicPaws();
+        }
+    }
+
+    createBasicPaws() {
         // Create paw material
         const pawMaterial = new THREE.MeshPhongMaterial({
             color: 0xFF0000, // Bright red for visibility
