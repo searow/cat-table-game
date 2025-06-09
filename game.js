@@ -402,11 +402,30 @@ class CatGame {
             if (distance < 1.5) {
                 // Knock object off table
                 obj.userData.isKnocked = true;
+                
+                // Get the cat's right vector (perpendicular to facing direction)
+                const rightVector = new THREE.Vector3(1, 0, 0);
+                rightVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.rotation);
+                
+                // Get the cat's forward vector (negated to go forward)
+                const forwardVector = new THREE.Vector3(0, 0, -1);
+                forwardVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.rotation);
+                
+                // Determine direction based on which paw is animating
+                let horizontalForce = 0;
+                if (this.isLeftPawAnimating) {
+                    horizontalForce = 0.05 + (Math.random() - 0.5) * 0.02; // Base 0.05 ± 0.01
+                } else if (this.isRightPawAnimating) {
+                    horizontalForce = -0.05 + (Math.random() - 0.5) * 0.02; // Base -0.05 ± 0.01
+                }
+                
+                // Apply the force in the cat's local space
                 obj.userData.velocity = new THREE.Vector3(
-                    (Math.random() - 0.5) * 0.2,
+                    rightVector.x * horizontalForce + forwardVector.x * 0.05,
                     0.1,
-                    (Math.random() - 0.5) * 0.2
+                    rightVector.z * horizontalForce + forwardVector.z * 0.05
                 );
+                
                 // Increment score when object is hit
                 this.updateScore();
             }
