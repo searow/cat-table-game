@@ -413,14 +413,36 @@ class CatGame {
     updateObjects() {
         this.tableObjects.forEach(obj => {
             if (obj.userData.isKnocked) {
-                obj.position.add(obj.userData.velocity);
-                obj.userData.velocity.y -= 0.01; // gravity
+                // Apply gravity
+                obj.userData.velocity.y -= 0.01;
                 
-                // Stop when hitting the ground
-                if (obj.position.y < -2) {
-                    obj.position.y = -2;
-                    obj.userData.velocity.set(0, 0, 0);
+                // Update position
+                obj.position.add(obj.userData.velocity);
+                
+                // Check if object is over the table
+                const isOverTable = Math.abs(obj.position.x) < 4 && Math.abs(obj.position.z) < 4;
+                
+                if (isOverTable) {
+                    // Bounce off table (table is at y = -0.5)
+                    if (obj.position.y < -0.4) { // Slightly above table to prevent clipping
+                        obj.position.y = -0.4;
+                        obj.userData.velocity.y *= -0.6; // Bounce with energy loss
+                        
+                        // Add some friction to horizontal movement
+                        obj.userData.velocity.x *= 0.95;
+                        obj.userData.velocity.z *= 0.95;
+                    }
+                } else {
+                    // If off the table, let it fall until it hits the ground
+                    if (obj.position.y < -2) {
+                        obj.position.y = -2;
+                        obj.userData.velocity.set(0, 0, 0);
+                    }
                 }
+                
+                // Add some rotation based on movement
+                obj.rotation.x += obj.userData.velocity.z * 0.1;
+                obj.rotation.z += obj.userData.velocity.x * 0.1;
             }
         });
     }
