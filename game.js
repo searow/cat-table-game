@@ -317,7 +317,7 @@ class CatGame {
         // Animate right paw swiping
         const startTime = Date.now();
         const rotationDuration = 150; // Duration for rotation (half of original)
-        const arcDuration = 300; // Duration for arc motion (unchanged)
+        const arcDuration = 350; // Duration for arc motion (unchanged)
         const returnDuration = 150; // Duration for return motion (half of original)
         const totalDuration = rotationDuration + arcDuration + returnDuration;
 
@@ -414,16 +414,16 @@ class CatGame {
                 // Determine direction based on which paw is animating
                 let horizontalForce = 0;
                 if (this.isLeftPawAnimating) {
-                    horizontalForce = 0.03 + (Math.random() - 0.5) * 0.02; // Base 0.05 ± 0.01
+                    horizontalForce = 0.03 + (Math.random() - 0.5) * 0.1; // Base 0.03 ± 0.05
                 } else if (this.isRightPawAnimating) {
-                    horizontalForce = -0.03 + (Math.random() - 0.5) * 0.02; // Base -0.05 ± 0.01
+                    horizontalForce = -0.03 + (Math.random() - 0.5) * 0.1; // Base -0.03 ± 0.05
                 }
                 
                 // Apply the force in the cat's local space
                 obj.userData.velocity = new THREE.Vector3(
-                    rightVector.x * horizontalForce + forwardVector.x * 0.02, // Reduced from 0.05 to 0.02
-                    0.1,
-                    rightVector.z * horizontalForce + forwardVector.z * 0.02  // Reduced from 0.05 to 0.02
+                    rightVector.x * horizontalForce + forwardVector.x * 0.02,
+                    Math.random() * 0.1, // Random height between 0 and 0.1
+                    rightVector.z * horizontalForce + forwardVector.z * 0.02
                 );
                 
                 // Increment score when object is hit
