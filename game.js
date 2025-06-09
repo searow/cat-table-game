@@ -422,7 +422,7 @@ class CatGame {
                 // Apply the force in the cat's local space
                 obj.userData.velocity = new THREE.Vector3(
                     rightVector.x * horizontalForce + forwardVector.x * 0.02,
-                    Math.random() * 0.1, // Random height between 0 and 0.1
+                    0.08 + Math.random() * 0.02, // Random height between 0 and 0.1
                     rightVector.z * horizontalForce + forwardVector.z * 0.02
                 );
                 
