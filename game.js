@@ -395,6 +395,9 @@ class CatGame {
         cameraDirection.applyQuaternion(this.camera.quaternion);
 
         this.tableObjects.forEach(obj => {
+            // Skip if object has already been hit
+            if (obj.userData.isKnocked) return;
+
             const distance = cameraPosition.distanceTo(obj.position);
             if (distance < 1.5) {
                 // Knock object off table
@@ -426,17 +429,28 @@ class CatGame {
                     // Bounce off table (table is at y = -0.5)
                     if (obj.position.y < -0.4) { // Slightly above table to prevent clipping
                         obj.position.y = -0.4;
-                        obj.userData.velocity.y *= -0.6; // Bounce with energy loss
+                        obj.userData.velocity.y *= -0.4; // Increased dampening (was 0.6)
                         
-                        // Add some friction to horizontal movement
-                        obj.userData.velocity.x *= 0.95;
-                        obj.userData.velocity.z *= 0.95;
+                        // Increased friction when touching table
+                        obj.userData.velocity.x *= 0.85; // More horizontal friction (was 0.95)
+                        obj.userData.velocity.z *= 0.85;
+                        
+                        // Apply additional dampening to very small movements
+                        if (Math.abs(obj.userData.velocity.x) < 0.01) obj.userData.velocity.x = 0;
+                        if (Math.abs(obj.userData.velocity.z) < 0.01) obj.userData.velocity.z = 0;
+                        if (Math.abs(obj.userData.velocity.y) < 0.01) obj.userData.velocity.y = 0;
+                        
+                        // Reset isKnocked if object has come to a complete stop
+                        if (obj.userData.velocity.length() < 0.01) {
+                            obj.userData.isKnocked = false;
+                        }
                     }
                 } else {
                     // If off the table, let it fall until it hits the ground
                     if (obj.position.y < -2) {
                         obj.position.y = -2;
                         obj.userData.velocity.set(0, 0, 0);
+                        obj.userData.isKnocked = false; // Reset isKnocked when it hits the ground
                     }
                 }
                 
