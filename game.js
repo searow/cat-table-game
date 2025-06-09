@@ -160,7 +160,7 @@ class CatGame {
             
             // Create a smooth arc motion
             const angle = Math.sin(progress * Math.PI) * 0.5;
-            this.rightPaw.rotation.x = -angle;
+            this.rightPaw.rotation.x = angle;
             
             // Check for collisions with objects
             this.checkObjectCollisions();
