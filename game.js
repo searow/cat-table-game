@@ -194,6 +194,9 @@ class CatGame {
     }
 
     swipeLeftPaw() {
+        // Store original rotation
+        const originalRotation = this.leftPaw.rotation.x;
+        
         // Animate left paw swiping
         const startTime = Date.now();
         const duration = 500; // 500ms animation
@@ -204,7 +207,7 @@ class CatGame {
             
             // Create a smooth arc motion
             const angle = Math.sin(progress * Math.PI) * 0.5;
-            this.leftPaw.rotation.x = angle;
+            this.leftPaw.rotation.x = originalRotation + angle;
             
             // Check for collisions with objects
             this.checkObjectCollisions();
@@ -213,8 +216,8 @@ class CatGame {
             if (progress < 1) {
                 requestAnimationFrame(animateSwipe);
             } else {
-                // Reset paw after animation
-                this.leftPaw.rotation.x = 0;
+                // Reset paw to original rotation
+                this.leftPaw.rotation.x = originalRotation;
             }
         };
 
@@ -223,6 +226,9 @@ class CatGame {
     }
 
     swipeRightPaw() {
+        // Store original rotation
+        const originalRotation = this.rightPaw.rotation.x;
+        
         // Animate right paw swiping
         const startTime = Date.now();
         const duration = 500; // 500ms animation
@@ -233,7 +239,7 @@ class CatGame {
             
             // Create a smooth arc motion
             const angle = Math.sin(progress * Math.PI) * 0.5;
-            this.rightPaw.rotation.x = angle;
+            this.rightPaw.rotation.x = originalRotation + angle;
             
             // Check for collisions with objects
             this.checkObjectCollisions();
@@ -242,8 +248,8 @@ class CatGame {
             if (progress < 1) {
                 requestAnimationFrame(animateSwipe);
             } else {
-                // Reset paw after animation
-                this.rightPaw.rotation.x = 0;
+                // Reset paw to original rotation
+                this.rightPaw.rotation.x = originalRotation;
             }
         };
 
