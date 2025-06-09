@@ -31,12 +31,10 @@ class CatGame {
         console.log('Lights added');
 
         // Table
-        const tableGeometry = new THREE.BoxGeometry(10, 0.5, 6);
-        const tableMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
-        this.table = new THREE.Mesh(tableGeometry, tableMaterial);
-        this.table.position.y = -1;
-        this.scene.add(this.table);
-        console.log('Table added');
+        this.table = null;
+        this.tableObjects = [];
+        this.createTableObjects();
+        console.log('Table objects created');
 
         // Initialize paws as null
         this.leftPaw = null;
@@ -61,11 +59,6 @@ class CatGame {
         // Event listeners
         document.addEventListener('keydown', this.onKeyDown.bind(this));
         document.addEventListener('keyup', this.onKeyUp.bind(this));
-
-        // Objects on table
-        this.objects = [];
-        this.createTableObjects();
-        console.log('Table objects created');
 
         // Add animation state tracking
         this.isLeftPawAnimating = false;
@@ -164,21 +157,46 @@ class CatGame {
     }
 
     createTableObjects() {
-        // Create some random objects on the table
-        const objects = [
-            { geometry: new THREE.CylinderGeometry(0.2, 0.2, 0.4, 32), color: 0xff0000, position: [-2, 0, -1] },
-            { geometry: new THREE.BoxGeometry(0.3, 0.3, 0.3), color: 0x00ff00, position: [2, 0, -1] },
-            { geometry: new THREE.SphereGeometry(0.2, 32, 32), color: 0x0000ff, position: [0, 0, -2] }
+        // Create table
+        const tableGeometry = new THREE.BoxGeometry(8, 0.1, 8); // Doubled table size
+        const tableMaterial = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+        this.table = new THREE.Mesh(tableGeometry, tableMaterial);
+        this.table.position.set(0, -0.5, 0);
+        this.scene.add(this.table);
+
+        // Create objects on table
+        const objectCount = 30;
+        const tableSize = 7; // Increased to match larger table (slightly smaller than table to keep objects on table)
+        const objectTypes = [
+            { geometry: new THREE.BoxGeometry(0.2, 0.2, 0.2), color: 0xFF0000 },
+            { geometry: new THREE.SphereGeometry(0.1, 16, 16), color: 0x00FF00 },
+            { geometry: new THREE.ConeGeometry(0.1, 0.2, 16), color: 0x0000FF }
         ];
 
-        objects.forEach(obj => {
-            const material = new THREE.MeshPhongMaterial({ color: obj.color });
-            const mesh = new THREE.Mesh(obj.geometry, material);
-            mesh.position.set(...obj.position);
-            mesh.userData.isKnocked = false;
-            this.objects.push(mesh);
-            this.scene.add(mesh);
-        });
+        for (let i = 0; i < objectCount; i++) {
+            const type = objectTypes[Math.floor(Math.random() * objectTypes.length)];
+            const object = new THREE.Mesh(
+                type.geometry,
+                new THREE.MeshStandardMaterial({ color: type.color })
+            );
+
+            // Random position within table bounds
+            object.position.set(
+                (Math.random() - 0.5) * tableSize,
+                -0.4, // Just above table
+                (Math.random() - 0.5) * tableSize
+            );
+
+            // Random rotation
+            object.rotation.set(
+                Math.random() * Math.PI,
+                Math.random() * Math.PI,
+                Math.random() * Math.PI
+            );
+
+            this.tableObjects.push(object);
+            this.scene.add(object);
+        }
     }
 
     onKeyDown(event) {
@@ -373,9 +391,7 @@ class CatGame {
         const cameraDirection = new THREE.Vector3(0, 0, -1);
         cameraDirection.applyQuaternion(this.camera.quaternion);
 
-        this.objects.forEach(obj => {
-            if (obj.userData.isKnocked) return;
-
+        this.tableObjects.forEach(obj => {
             const distance = cameraPosition.distanceTo(obj.position);
             if (distance < 1.5) {
                 // Knock object off table
@@ -392,7 +408,7 @@ class CatGame {
     }
 
     updateObjects() {
-        this.objects.forEach(obj => {
+        this.tableObjects.forEach(obj => {
             if (obj.userData.isKnocked) {
                 obj.position.add(obj.userData.velocity);
                 obj.userData.velocity.y -= 0.01; // gravity
