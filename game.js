@@ -194,20 +194,47 @@ class CatGame {
     }
 
     swipeLeftPaw() {
-        // Store original rotation
-        const originalRotation = this.leftPaw.rotation.x;
+        // Store original positions and rotations
+        const originalRotation = this.leftPaw.rotation.y;
+        const originalPosition = {
+            y: this.leftPaw.position.y,
+            z: this.leftPaw.position.z
+        };
         
         // Animate left paw swiping
         const startTime = Date.now();
-        const duration = 500; // 500ms animation
+        const duration = 400; // Total animation duration
 
         const animateSwipe = () => {
             const elapsed = Date.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
             
-            // Create a smooth arc motion
-            const angle = Math.sin(progress * Math.PI) * 0.5;
-            this.leftPaw.rotation.x = originalRotation + angle;
+            if (progress < 0.33) {
+                // Phase 1: Rotate -90 degrees
+                const rotationProgress = progress * 3; // Scale to 0-1 for first third
+                const angle = rotationProgress * -Math.PI/2; // Rotate -90 degrees
+                this.leftPaw.rotation.y = originalRotation + angle;
+            } else if (progress < 0.66) {
+                // Phase 2: Move in semi-circle
+                const arcProgress = (progress - 0.33) * 3; // Scale to 0-1 for middle third
+                const angle = arcProgress * Math.PI; // Move through 180 degrees
+                
+                // Calculate position on semi-circle
+                const radius = 0.3; // Radius of the arc
+                this.leftPaw.position.y = originalPosition.y + (Math.sin(angle) * radius);
+                this.leftPaw.position.z = originalPosition.z - (Math.cos(angle) * radius);
+            } else {
+                // Phase 3: Return to original position while rotating back
+                const returnProgress = (progress - 0.66) * 3; // Scale to 0-1 for final third
+                const angle = (1 - returnProgress) * -Math.PI/2; // Return from -90 to 0
+                this.leftPaw.rotation.y = originalRotation + angle;
+                
+                // Return to original position
+                const returnArc = (1 - returnProgress) * Math.PI;
+                const radius = 0.3;
+                this.leftPaw.position.y = originalPosition.y + (Math.sin(returnArc) * radius);
+                this.leftPaw.position.z = originalPosition.z - (Math.cos(returnArc) * radius);
+            }
             
             // Check for collisions with objects
             this.checkObjectCollisions();
@@ -216,8 +243,10 @@ class CatGame {
             if (progress < 1) {
                 requestAnimationFrame(animateSwipe);
             } else {
-                // Reset paw to original rotation
-                this.leftPaw.rotation.x = originalRotation;
+                // Reset paw to original position and rotation
+                this.leftPaw.rotation.y = originalRotation;
+                this.leftPaw.position.y = originalPosition.y;
+                this.leftPaw.position.z = originalPosition.z;
             }
         };
 
@@ -226,20 +255,47 @@ class CatGame {
     }
 
     swipeRightPaw() {
-        // Store original rotation
-        const originalRotation = this.rightPaw.rotation.x;
+        // Store original positions and rotations
+        const originalRotation = this.rightPaw.rotation.y;
+        const originalPosition = {
+            y: this.rightPaw.position.y,
+            z: this.rightPaw.position.z
+        };
         
         // Animate right paw swiping
         const startTime = Date.now();
-        const duration = 500; // 500ms animation
+        const duration = 400; // Total animation duration
 
         const animateSwipe = () => {
             const elapsed = Date.now() - startTime;
             const progress = Math.min(elapsed / duration, 1);
             
-            // Create a smooth arc motion
-            const angle = Math.sin(progress * Math.PI) * 0.5;
-            this.rightPaw.rotation.x = originalRotation + angle;
+            if (progress < 0.33) {
+                // Phase 1: Rotate 90 degrees
+                const rotationProgress = progress * 3; // Scale to 0-1 for first third
+                const angle = rotationProgress * Math.PI/2; // Rotate 90 degrees
+                this.rightPaw.rotation.y = originalRotation + angle; // Positive rotation for right paw
+            } else if (progress < 0.66) {
+                // Phase 2: Move in semi-circle
+                const arcProgress = (progress - 0.33) * 3; // Scale to 0-1 for middle third
+                const angle = arcProgress * Math.PI; // Move through 180 degrees
+                
+                // Calculate position on semi-circle
+                const radius = 0.3; // Radius of the arc
+                this.rightPaw.position.y = originalPosition.y + (Math.sin(angle) * radius);
+                this.rightPaw.position.z = originalPosition.z - (Math.cos(angle) * radius);
+            } else {
+                // Phase 3: Return to original position while rotating back
+                const returnProgress = (progress - 0.66) * 3; // Scale to 0-1 for final third
+                const angle = (1 - returnProgress) * Math.PI/2; // Return from 90 to 0
+                this.rightPaw.rotation.y = originalRotation + angle; // Positive rotation for right paw
+                
+                // Return to original position
+                const returnArc = (1 - returnProgress) * Math.PI;
+                const radius = 0.3;
+                this.rightPaw.position.y = originalPosition.y + (Math.sin(returnArc) * radius);
+                this.rightPaw.position.z = originalPosition.z - (Math.cos(returnArc) * radius);
+            }
             
             // Check for collisions with objects
             this.checkObjectCollisions();
@@ -248,8 +304,10 @@ class CatGame {
             if (progress < 1) {
                 requestAnimationFrame(animateSwipe);
             } else {
-                // Reset paw to original rotation
-                this.rightPaw.rotation.x = originalRotation;
+                // Reset paw to original position and rotation
+                this.rightPaw.rotation.y = originalRotation;
+                this.rightPaw.position.y = originalPosition.y;
+                this.rightPaw.position.z = originalPosition.z;
             }
         };
 
