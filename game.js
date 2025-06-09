@@ -414,9 +414,9 @@ class CatGame {
                 // Determine direction based on which paw is animating
                 let horizontalForce = 0;
                 if (this.isLeftPawAnimating) {
-                    horizontalForce = 0.03 + (Math.random() - 0.5) * 0.1; // Base 0.03 ± 0.05
+                    horizontalForce = 0.03 + (Math.random() - 0.5) * 0.05; // Base 0.03 ± 0.05
                 } else if (this.isRightPawAnimating) {
-                    horizontalForce = -0.03 + (Math.random() - 0.5) * 0.1; // Base -0.03 ± 0.05
+                    horizontalForce = -0.03 + (Math.random() - 0.5) * 0.05; // Base -0.03 ± 0.05
                 }
                 
                 // Apply the force in the cat's local space
