@@ -212,9 +212,9 @@ class CatGame {
         
         // Animate left paw swiping
         const startTime = Date.now();
-        const rotationDuration = 300; // Duration for rotation
-        const arcDuration = 300; // Duration for arc motion
-        const returnDuration = 300; // Duration for return motion
+        const rotationDuration = 150; // Duration for rotation (half of original)
+        const arcDuration = 300; // Duration for arc motion (unchanged)
+        const returnDuration = 150; // Duration for return motion (half of original)
         const totalDuration = rotationDuration + arcDuration + returnDuration;
 
         const animateSwipe = () => {
@@ -235,11 +235,13 @@ class CatGame {
                 const arcProgress = (progress - (rotationDuration / totalDuration)) * (totalDuration / arcDuration);
                 const angle = arcProgress * Math.PI; // Move from 0 to 180 degrees
                 const radius = 0.5; // Radius of the arc
+                const xScale = 0.75; // Scale factor for X movement (1/2 of original)
+                const zScale = 0.25; // Scale factor for Z movement (1/4 of original)
                 
                 // Calculate arc position relative to original position
                 // Start at original position and move in semi-circle
-                const dx = Math.sin(angle) * radius;
-                const dz = (Math.cos(angle) - 1) * radius; // Subtract 1 to start at original position
+                const dx = Math.sin(angle) * radius * xScale;
+                const dz = (Math.cos(angle) - 1) * radius * zScale;
                 
                 // Move in semi-circle (negative X and negative Z)
                 this.leftPaw.position.x = originalPosition.x - dx;
@@ -252,8 +254,8 @@ class CatGame {
                 const returnProgress = (progress - ((rotationDuration + arcDuration) / totalDuration)) * (totalDuration / returnDuration);
                 
                 // Linear interpolation back to original position
-                this.leftPaw.position.x = originalPosition.x - (Math.sin(Math.PI) * 0.5 * (1 - returnProgress));
-                this.leftPaw.position.z = originalPosition.z + ((Math.cos(Math.PI) - 1) * 0.5 * (1 - returnProgress));
+                this.leftPaw.position.x = originalPosition.x - (Math.sin(Math.PI) * 0.5 * 0.5 * (1 - returnProgress)); // Scale X movement by 1/2
+                this.leftPaw.position.z = originalPosition.z + ((Math.cos(Math.PI) - 1) * 0.5 * 0.25 * (1 - returnProgress)); // Scale Z movement by 1/4
                 
                 // Rotate back to original rotation
                 this.leftPaw.rotation.y = originalRotation - (Math.PI/2 * (1 - returnProgress));
@@ -293,9 +295,9 @@ class CatGame {
         
         // Animate right paw swiping
         const startTime = Date.now();
-        const rotationDuration = 300; // Duration for rotation
-        const arcDuration = 300; // Duration for arc motion
-        const returnDuration = 300; // Duration for return motion
+        const rotationDuration = 150; // Duration for rotation (half of original)
+        const arcDuration = 300; // Duration for arc motion (unchanged)
+        const returnDuration = 150; // Duration for return motion (half of original)
         const totalDuration = rotationDuration + arcDuration + returnDuration;
 
         const animateSwipe = () => {
@@ -316,11 +318,13 @@ class CatGame {
                 const arcProgress = (progress - (rotationDuration / totalDuration)) * (totalDuration / arcDuration);
                 const angle = arcProgress * Math.PI; // Move from 0 to 180 degrees
                 const radius = 0.5; // Radius of the arc
+                const xScale = 0.75; // Scale factor for X movement (1/2 of original)
+                const zScale = 0.25; // Scale factor for Z movement (1/4 of original)
                 
                 // Calculate arc position relative to original position
                 // Start at original position and move in semi-circle
-                const dx = Math.sin(angle) * radius;
-                const dz = (Math.cos(angle) - 1) * radius; // Subtract 1 to start at original position
+                const dx = Math.sin(angle) * radius * xScale;
+                const dz = (Math.cos(angle) - 1) * radius * zScale;
                 
                 // Move in semi-circle (positive X and negative Z)
                 this.rightPaw.position.x = originalPosition.x + dx;
@@ -333,8 +337,8 @@ class CatGame {
                 const returnProgress = (progress - ((rotationDuration + arcDuration) / totalDuration)) * (totalDuration / returnDuration);
                 
                 // Linear interpolation back to original position
-                this.rightPaw.position.x = originalPosition.x + (Math.sin(Math.PI) * 0.5 * (1 - returnProgress));
-                this.rightPaw.position.z = originalPosition.z + ((Math.cos(Math.PI) - 1) * 0.5 * (1 - returnProgress));
+                this.rightPaw.position.x = originalPosition.x + (Math.sin(Math.PI) * 0.5 * 0.5 * (1 - returnProgress)); // Scale X movement by 1/2
+                this.rightPaw.position.z = originalPosition.z + ((Math.cos(Math.PI) - 1) * 0.5 * 0.25 * (1 - returnProgress)); // Scale Z movement by 1/4
                 
                 // Rotate back to original rotation
                 this.rightPaw.rotation.y = originalRotation + (Math.PI/2 * (1 - returnProgress));
